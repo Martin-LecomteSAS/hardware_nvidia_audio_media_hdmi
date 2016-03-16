@@ -105,8 +105,8 @@ const struct channel_list channel_list_table[] = {
 struct pcm_config pcm_config_default = {
     .channels = 2,
     .rate = 44100,
-    .period_size = 1024,
-    .period_count = 4,
+    .period_size = 512,
+    .period_count = 2,
     .format = PCM_FORMAT_S16_LE,
 };
 
@@ -208,7 +208,7 @@ static int make_sinkcompliant_buffers(void* input, void *output, int ipbytes)
 
   switch (out_pcmformat) {
     default:
-    case PCM_FORMAT_S32_LE:
+    case PCM_FORMAT_S24_LE:
     {
        ALOGV("convert 16 to 24 bits for %d",ipbytes);
        /*convert 16 bit input to 24 bit output

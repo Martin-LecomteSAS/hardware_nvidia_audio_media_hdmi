@@ -32,7 +32,7 @@ LOCAL_MODULE := audio.primary.$(TARGET_AUDIO_HWNAME)
 LOCAL_MODULE_RELATIVE_PATH := hw
 
 LOCAL_SRC_FILES := \
-	tinyaudio_hw.c
+	nvidia_hdmi_audio_hw.c
 
 LOCAL_C_INCLUDES += \
 	external/tinyalsa/include \
