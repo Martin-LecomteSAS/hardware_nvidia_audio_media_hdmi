@@ -46,7 +46,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define LOG_TAG "tiny_hdmi_audio_hw"
+#define LOG_TAG "nvidia_hdmi_audio_hw"
 #define LOG_NDEBUG 0
 
 #include <errno.h>
