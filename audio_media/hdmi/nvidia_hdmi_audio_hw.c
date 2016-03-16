@@ -103,9 +103,9 @@ const struct channel_list channel_list_table[] = {
 };
 
 struct pcm_config pcm_config_default = {
-    .channels = 2,
-    .rate = 44100,
-    .period_size = 512,
+ .channels = 2,
+    .rate = 48000,
+    .period_size = 1024,
     .period_count = 2,
     .format = PCM_FORMAT_S16_LE,
 };
