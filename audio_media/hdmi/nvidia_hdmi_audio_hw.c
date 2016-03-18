@@ -104,9 +104,9 @@ const struct channel_list channel_list_table[] = {
 
 struct pcm_config pcm_config_default = {
     .channels = 2,
-    .rate = 48000,
-    .period_size = 1024,
-    .period_count = 2,
+    .rate = 44100,
+    .period_size = 256,
+    .period_count = 3,
     .format = PCM_FORMAT_S16_LE,
 };
 
@@ -193,47 +193,6 @@ static int format_to_bits(enum pcm_format pcmformat)
   };
 }
 
-static int make_sinkcompliant_buffers(void* input, void *output, int ipbytes)
-{
-  int i = 0,outbytes = 0;
-  enum pcm_format in_pcmformat;
-  enum pcm_format out_pcmformat;
-  int *src = (int*)input;
-  int *dst = (int*)output;
-
-  /*by default android currently support only
-    16 bit signed PCM*/
-  in_pcmformat = PCM_FORMAT_S16_LE;
-  out_pcmformat = Get_SinkSupported_format();
-
-  switch (out_pcmformat) {
-    default:
-    case PCM_FORMAT_S24_LE:
-    {
-       ALOGV("convert 16 to 24 bits for %d",ipbytes);
-       /*convert 16 bit input to 24 bit output
-         in a 32 bit sample*/
-       if(0 == ipbytes)
-          break;
-
-       for(i = 0; i < (ipbytes/4); i++){
-          int x = (int)((int*)src)[i];
-          dst[i*2] = ((int)( x & 0x0000FFFF)) << 8;
-          // trying to sign exdent
-          dst[i*2] = dst[i*2] << 8;
-          dst[i*2] = dst[i*2] >> 8;
-          //shift to middle
-          dst[i*2 + 1] = (int)(( x & 0xFFFF0000) >> 8);
-          dst[i*2 + 1] = dst[i*2 + 1] << 8;
-          dst[i*2 + 1] = dst[i*2 + 1] >> 8;
-        }
-        outbytes=ipbytes * 2;
-
-    }//case
-  };//switch
-
-  return outbytes;
-}
 
 /* must be called with hw device and output stream mutexes locked */
 static int start_output_stream(struct stream_out *out)
@@ -608,23 +567,6 @@ static ssize_t out_write(struct audio_stream_out *stream, const void* buffer,
        ALOGD("%s: null handle to write - device already closed",__func__);
        goto err;
     }
-
-    if(Get_SinkSupported_format() == out->pcm_config.format){
-
-       /*16 bit data will be converted to 24 bit over 32 bit data type
-       hence the multiplier 2*/
-       dstbuff = (int32_t*)malloc(bytes* 2);
-       if (!dstbuff) {
-           pthread_mutex_unlock(&out->lock);
-           pthread_mutex_unlock(&out->dev->lock);
-           ALOGE("%s : memory allocation failed",__func__);
-           return -ENOMEM;
-       }
-
-       memset(dstbuff,0,bytes * 2);
-
-       outbytes = make_sinkcompliant_buffers((void*)buffer, (void*)dstbuff,bytes);
-     } //if()for conversion
 
     if(dstbuff){
       ret = pcm_write(out->pcm, (void *)dstbuff, outbytes);

@@ -52,7 +52,7 @@ ifdef BOARD_AUDIO_OUT_SAMPLING_RATE
     LOCAL_CFLAGS += -DOUT_SAMPLING_RATE=$(BOARD_AUDIO_OUT_SAMPLING_RATE)
 endif
 
-LOCAL_SHARED_LIBRARIES := liblog libcutils libtinyalsa libaudioutils libaudio-resampler libaudioroute
+LOCAL_SHARED_LIBRARIES := liblog libcutils libtinyalsa libaudioutils libaudio-resampler libaudioroute libaudiospdif
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
