@@ -68,7 +68,7 @@
 
 #define UNUSED_PARAMETER(x)        (void)(x)
 
-#define DEFAULT_CARD               1
+#define DEFAULT_CARD               0
 #define DEFAULT_DEVICE             3
 
 /*this is used to avoid starvation*/
